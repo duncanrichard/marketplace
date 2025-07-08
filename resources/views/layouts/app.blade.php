@@ -6,13 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>DSoft</title>
 
-    <!-- ========== All CSS files linkup ========= -->
+    <!-- ========== CSS utama ========= -->
     <link rel="stylesheet" href="{{ asset('css/lineicons.css') }}"/>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- ========== Select2 CSS ========= -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     @yield('styles')
 </head>
 <body>
-<!-- ======== sidebar-nav start =========== -->
+
+<!-- ======== Sidebar start =========== -->
 <aside class="sidebar-nav-wrapper">
     <div class="navbar-logo">
         <a href="{{ route('home') }}">
@@ -24,26 +30,25 @@
     </nav>
 </aside>
 <div class="overlay"></div>
-<!-- ======== sidebar-nav end =========== -->
+<!-- ======== Sidebar end =========== -->
 
-<!-- ======== main-wrapper start =========== -->
+<!-- ======== Main wrapper start =========== -->
 <main class="main-wrapper">
 
-    <!-- ========== header start ========== -->
+    <!-- ========== Header start ========== -->
     @include('layouts.header')
-    <!-- ========== header end ========== -->
+    <!-- ========== Header end ========== -->
 
-    <!-- ========== section start ========== -->
+    <!-- ========== Main section start ========== -->
     <section class="section">
         <div class="container-fluid">
             @include('layouts.messages')
             @yield('content')
         </div>
-        <!-- end container -->
     </section>
-    <!-- ========== section end ========== -->
+    <!-- ========== Main section end ========== -->
 
-    <!-- ========== footer start =========== -->
+    <!-- ========== Footer start =========== -->
     <footer class="footer">
         <div class="container-fluid">
             <div class="row">
@@ -51,33 +56,32 @@
                     <div class="copyright text-md-start">
                         <p class="text-sm">
                             Designed and Developed by
-                            <a
-                                    href="https://plainadmin.com"
-                                    rel="nofollow"
-                                    target="_blank"
-                            >
-                                PlainAdmin
-                            </a>
+                            <a href="https://plainadmin.com" rel="nofollow" target="_blank">PlainAdmin</a>
                         </p>
                     </div>
                 </div>
-                <!-- end col-->
             </div>
-            <!-- end row -->
         </div>
-        <!-- end container -->
     </footer>
-    <!-- ========== footer end =========== -->
+    <!-- ========== Footer end =========== -->
 </main>
-<!-- ======== main-wrapper end =========== -->
+<!-- ======== Main wrapper end =========== -->
 
-<!-- ========= All Javascript files linkup ======== -->
+<!-- ========== JavaScript Files ========= -->
+
+<!-- jQuery (wajib sebelum Select2) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap Bundle (Popper.js + Bootstrap JS) -->
 <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-{{--<script src="{{ asset('js/app.js') }}"></script>--}}
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<!-- App Custom JS -->
 <script src="{{ asset('js/main.js') }}"></script>
-<!-- di layouts.app bagian <head> -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 @yield('scripts')
+
 </body>
 </html>
