@@ -33,110 +33,48 @@ $role = auth()->user()->role;
             <span class="text">Dashboard</span>
         </a>
     </li>
+    <li class="nav-item @if(request()->routeIs('kategori.*')) active @endif">
+    <a class="nav-link" href="{{ route('kategori.index') }}">
+        <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" style="height: 22px; width: 22px;" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+        </span>
+        <span class="text">Kategori Barang</span>
+    </a>
+</li>
+<li class="nav-item @if(request()->routeIs('produk.*')) active @endif">
+    <a class="nav-link" href="{{ route('produk.index') }}">
+        <span class="icon">
+            <!-- Box Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" style="height: 22px; width: 22px;" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M3 7l9-4 9 4M3 7v10l9 4 9-4V7M12 3v18" />
+            </svg>
+        </span>
+        <span class="text">Master Barang</span>
+    </a>
+</li>
 
-    {{-- EVENT MANAGEMENT --}}
-    @if(in_array($role, ['user', 'master', 'manager']))
-    <li class="nav-item">
-        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
-            href="#eventSubmenu" role="button">
-            <span class="d-flex align-items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" style="height: 22px; width: 22px;" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M8 7V3m8 4V3M3 11h18M5 20h14a2 2 0 002-2V7H3v11a2 2 0 002 2z" />
-                </svg>
-                <span class="ms-2">Event Management</span>
-            </span>
-            <span class="caret">&#x25BC;</span>
-        </a>
-        <div class="collapse" id="eventSubmenu">
-            <ul class="nav flex-column ms-4">
+{{-- KATEGORI BARANG --}}
+@if(in_array($role, ['master', 'manager']))
+<li class="nav-item @if(request()->routeIs('kategori.*')) active @endif">
+    <a class="nav-link" href="{{ route('kategori.index') }}">
+        <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" style="height: 22px; width: 22px;" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+        </span>
+        <span class="text">Kategori Barang</span>
+    </a>
+</li>
+@endif
 
-                <li class="nav-item">
-                    <a class="nav-link @if(request()->routeIs('events.submission')) active @endif"
-                        href="{{ route('events.submission') }}">
-                        Event Submissions
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link @if(request()->routeIs('campaign-categories.index')) active @endif"
-                        href="{{ route('campaign-categories.index') }}">
-                        Campaign Categories
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @if(request()->routeIs('import.pra-member')) active @endif"
-                        href="{{ route('import.pra-member') }}">
-                        Import Pra Member Tanpa Event
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </li>
-    <li class="nav-item @if(request()->routeIs('visits.index')) active @endif">
-        <a class="nav-link" href="{{ route('visits.index') }}">
-            <span class="icon">
-                <!-- Briefcase Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" style="height:22px; width:22px;" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2m3 0H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2z" />
-                </svg>
-            </span>
-            <span class="text">Client Visits</span>
-        </a>
-    </li>
-
-    <li class="nav-item @if(request()->routeIs('partnerships.index')) active @endif">
-        <a class="nav-link" href="{{ route('strategic-partnerships.index') }}">
-            <span class="icon">
-                <!-- Handshake Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" style="height:22px; width:22px;" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M12 11c0 1.104.896 2 2 2h4a2 2 0 002-2v-1a1 1 0 00-1-1h-5v-1a2 2 0 00-2-2H8.5a1.5 1.5 0 00-1.415 1H6a2 2 0 00-2 2v1a2 2 0 002 2h4a2 2 0 002-2z" />
-                </svg>
-            </span>
-            <span class="text">Strategic Partnerships</span>
-        </a>
-    </li>
-
-
-    <li class="nav-item">
-        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
-            href="#exportSubmenu" role="button" aria-expanded="false">
-            <span class="d-flex align-items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" style="height: 22px; width: 22px;" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v16h16V4H4zm8 8V4m0 8l-4-4m4 4l4-4" />
-                </svg>
-                <span class="ms-2">Export Data</span>
-            </span>
-            <span class="caret">&#x25BC;</span>
-        </a>
-        <div class="collapse" id="exportSubmenu">
-            <ul class="nav flex-column ms-4">
-                <li class="nav-item">
-                    <a class="nav-link @if(request()->routeIs('exports.events')) active @endif" href="">
-                        Export Event
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @if(request()->routeIs('exports.partnerships')) active @endif" href="">
-                        Export Kerjasama
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @if(request()->routeIs('exports.visits')) active @endif" href="">
-                        Export Kunjungan
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </li>
-
-    @endif
 
     {{-- USERS --}}
     @if($role === 'master')

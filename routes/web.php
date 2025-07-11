@@ -2,121 +2,116 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\EventController;
 use App\Http\Controllers\NotifikasiController;
-use App\Http\Controllers\PraMemberController;
-use App\Http\Controllers\CampaignController;
-use App\Http\Controllers\VisitController;
-use App\Http\Controllers\StrategicPartnershipController;
 use App\Http\Controllers\PermissionController;
-
+use App\Http\Controllers\TokoController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\ProdukController;
 
 /*
 |--------------------------------------------------------------------------
-| 🌐 Public Routes with Localization
+| 🌐 Public Routes
 |--------------------------------------------------------------------------
 */
 
-Route::group([
-    'prefix' => LaravelLocalization::setLocale(),
-    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
-], function () {
-    Route::get('/', fn() => redirect()->route('login'));
+// Landing page langsung ke dashboard toko
+// Public routes
+Route::get('/', [TokoController::class, 'index'])->name('toko.dashboard');
+Route::get('/toko', [TokoController::class, 'index']);
+Route::get('/checkout', [TokoController::class, 'checkout'])->name('checkout.index');
+Route::post('/checkout', [TokoController::class, 'prosesCheckout'])->name('checkout.submit');
+Route::get('/produk/{id}', [TokoController::class, 'show']);
 
-    // Form Pendaftaran Pra Member dengan Event
-    Route::get('/pra-member/{event}', [PraMemberController::class, 'show'])->name('pra-member.show');
-    Route::post('/pra-member/{event}', [PraMemberController::class, 'store'])->name('pra-member.store');
+// 🔍 Tambah ini untuk pencarian berdasarkan kode_booking
+Route::get('/cek-pesanan', [TokoController::class, 'formCekPesanan'])->name('pesanan.form');
+Route::post('/cek-pesanan', [TokoController::class, 'cariPesanan'])->name('pesanan.cari');
+
+/*
+|--------------------------------------------------------------------------
+| 🔐 Authentication Routes (Login, Register)
+|--------------------------------------------------------------------------
+*/
+
+// Akses melalui /admin/login
+Route::prefix('admin')->group(function () {
+    Auth::routes(); // Menyediakan login, register, dll
 });
 
 /*
 |--------------------------------------------------------------------------
-| 🔐 Authentication
-|--------------------------------------------------------------------------
-*/
-Auth::routes();
-
-/*
-|--------------------------------------------------------------------------
-| 📂 Protected Panel Routes (c-panel)
+| 🔐 Admin Panel Routes (c-panel)
 |--------------------------------------------------------------------------
 */
 Route::prefix('c-panel')->middleware('auth')->group(function () {
 
-    // Dashboard
+    // Halaman utama panel
     Route::get('/', [HomeController::class, 'index'])->name('home');
+
+    // Dashboard statistik
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/detail/{tanggal}', [DashboardController::class, 'detail'])->name('dashboard.detail');
 
-    // Profile
+    /*
+    |--------------------------------------------------------------------------
+    | 👤 Profile
+    |--------------------------------------------------------------------------
+    */
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    // User Management
+    /*
+    |--------------------------------------------------------------------------
+    | 👥 User Management
+    |--------------------------------------------------------------------------
+    */
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::post('/', [UserController::class, 'store'])->name('store');
         Route::put('/{user}', [UserController::class, 'update'])->name('update');
     });
 
-    // Event Management
-    Route::prefix('events')->name('events.')->group(function () {
-        Route::get('/', [EventController::class, 'index'])->name('index');
-        Route::get('/submission', [EventController::class, 'submission'])->name('submission');
-        Route::get('/create', [EventController::class, 'create'])->name('create');
-        Route::post('/store', [EventController::class, 'store'])->name('store');
-        Route::post('/import', [EventController::class, 'import'])->name('import');
-        Route::get('/show/{id}', [EventController::class, 'show'])->name('show');
-        Route::patch('/update-status/{id}', [EventController::class, 'updateStatus'])->name('updateStatus');
-        Route::post('/upload-photos', [EventController::class, 'uploadPhotos'])->name('uploadPhotos');
-        Route::patch('/{id}', [EventController::class, 'update'])->name('update');
-
-        // Import Pra Member ke Event
-        Route::post('/{event}/pra-members/import', [EventController::class, 'import_pra_member'])
-            ->name('pra-members.import');
-
-        // Email confirmation
-        Route::get('/{id}/status', [EventController::class, 'handleEmailAction'])->name('update-status')->middleware('signed');
-        Route::get('/{id}/email-action', [EventController::class, 'handleEmailAction'])->name('handle-email-action')->middleware('signed');
-    });
-
-    // Notifikasi
+    /*
+    |--------------------------------------------------------------------------
+    | 🔔 Notifikasi
+    |--------------------------------------------------------------------------
+    */
     Route::prefix('notifikasi')->name('notifikasi.')->group(function () {
         Route::get('/', [NotifikasiController::class, 'index'])->name('index');
         Route::get('/{id}/baca', [NotifikasiController::class, 'baca'])->name('baca');
         Route::post('/simpan', [NotifikasiController::class, 'simpan'])->name('simpan');
     });
 
-    // Campaign Management
-    Route::prefix('campaign-categories')->name('campaign-categories.')->group(function () {
-        Route::get('/', [CampaignController::class, 'index'])->name('index');
-        Route::get('/create', [CampaignController::class, 'create'])->name('create');
-        Route::post('/', [CampaignController::class, 'store'])->name('store');
-        Route::put('/{id}', [CampaignController::class, 'update'])->name('update');
-        Route::delete('/{id}', [CampaignController::class, 'destroy'])->name('destroy');
-    });
-
-    // Kunjungan Marketing
-    Route::resource('visits', VisitController::class);
-    Route::post('visits/import', [VisitController::class, 'import'])->name('visits.import');
-
-    // Kerjasama
-    Route::resource('strategic-partnerships', StrategicPartnershipController::class);
-    Route::post('/strategic-partnerships/import', [StrategicPartnershipController::class, 'import'])->name('strategic-partnerships.import');
-
-    // ✅ Import Pra Member Tanpa Event (Non Event)
-    Route::get('/pra-member/import', [PraMemberController::class, 'importForm'])->name('import.pra-member');
-    Route::post('/pra-member/import', [PraMemberController::class, 'importStore'])->name('import.pra-member.store');
-
-
-    // ✅ Hak Akses Dinamis
+    /*
+    |--------------------------------------------------------------------------
+    | 🔐 Hak Akses / Permissions
+    |--------------------------------------------------------------------------
+    */
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::post('/permissions', [PermissionController::class, 'update'])->name('permissions.update');
 
-    // Contoh Editor
+    /*
+    |--------------------------------------------------------------------------
+    | ✍️ Summernote Editor (Contoh)
+    |--------------------------------------------------------------------------
+    */
     Route::view('/summernote', 'vendor.summernote.example')->name('summernote');
+
+    /*
+    |--------------------------------------------------------------------------
+    | 📦 Kategori Barang
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('kategori', KategoriController::class);
+
+    /*
+    |--------------------------------------------------------------------------
+    | 📦 Produk (Master Barang)
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('produk', ProdukController::class);
+    
 });
